@@ -30,7 +30,7 @@ set.seed(3005)
 K = 50
 S = 4
 A.list = vector(mode = 'list', length = S)
-for(l in 1:S) A.list[[s]] = vector(mode = 'list', length = M)
+for(l in 1:S) A.list[[l]] = vector(mode = 'list', length = M)
 
 sig = diag(1,K)
 diag.coefs = c(0.8,1)
@@ -65,7 +65,7 @@ for(l in 1:S){
 ##########################################################################
 
 B.list = vector(mode = 'list', length = S)
-for(l in 1:S) B.list[[s]] = vector(mode = 'list', length = M)
+for(l in 1:S) B.list[[l]] = vector(mode = 'list', length = M)
 
 ## Non-Sparse cases (1 and 2)
 for(l in 1:2){
@@ -139,17 +139,20 @@ for(l in 3:4){
 #' session in which case the above generated lists lie not in the global environment.
 
 # Stack matrices of lists for saving to table file
-for(m in 1:M){
-  if(m == 1){
-    A.full = A.list[[1]]
-    B.full = t(B.list[[1]])
-  } else{
-    A.full = rbind(A.full,A.list[[m]])
-    B.full = cbind(B.full, t(B.list[[m]]))
+for(l in 1:S){
+  for(m in 1:M){
+    if(l == 1 & m == 1){
+      A.full = A.list[[l]][[1]]
+      B.full = t(B.list[[l]][[1]])
+    } else{
+      A.full = rbind(A.full,A.list[[l]][[m]])
+      B.full = cbind(B.full, t(B.list[[l]][[m]]))
+    }
   }
 }
 
-
+write.table(A.full, file = 'YOUR PATH/A.full.txt')
+write.table(B.full, file = 'YOUR PATH/B.full.txt')
 
 
 
