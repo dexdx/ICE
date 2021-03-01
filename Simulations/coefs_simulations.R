@@ -143,10 +143,10 @@ for(l in 1:S){
   for(m in 1:M){
     if(l == 1 & m == 1){
       A.full = A.list[[l]][[1]]
-      B.full = t(B.list[[l]][[1]])
+      B.full = B.list[[l]][,1]
     } else{
       A.full = rbind(A.full,A.list[[l]][[m]])
-      B.full = cbind(B.full, t(B.list[[l]][[m]]))
+      B.full = cbind(B.full, B.list[[l]][,m])
     }
   }
 }
