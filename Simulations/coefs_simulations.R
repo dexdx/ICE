@@ -65,7 +65,7 @@ for(l in 1:S){
 ##########################################################################
 
 B.list = vector(mode = 'list', length = S)
-for(l in 1:S) B.list[[l]] = vector(mode = 'list', length = M)
+for(l in 1:S) B.list[[l]] = matrix(0,K,M)
 
 ## Non-Sparse cases (1 and 2)
 for(l in 1:2){
@@ -83,13 +83,13 @@ for(l in 1:2){
     # PI full rank factorization
     PI_lr.rref = echelon(PI_lr)
     C = as.matrix(PI_lr[,1:r])
-    B = t(PI_lr.rref[1:r,])
+    B = PI_lr.rref[1:r,]
     
     # Modify list
     A.list[[l]][[m]] = A.lr
     
     # Save cointegrating vector
-    B.list[[l]][[m]] = B
+    B.list[[l]][,m] = B
     
   }
 }
@@ -125,7 +125,7 @@ for(l in 3:4){
     A.list[[l]][[m]] = A.s
     
     # Save (sparse) cointegrating vector
-    B.list[[l]][[m]] = B.s
+    B.list[[l]][,m] = t(B.s)
     
   }
 }
@@ -135,7 +135,7 @@ for(l in 3:4){
 #### 3) Save lists in tables for use in process simulations file #########
 ##########################################################################
 
-#' This step is only necessary if the 'process simulations' file is run on another
+#' This step is only necessary if the 'processes_simulations.R' file is run on another
 #' session in which case the above generated lists lie not in the global environment.
 
 # Stack matrices of lists for saving to table file
@@ -153,7 +153,3 @@ for(l in 1:S){
 
 write.table(A.full, file = 'YOUR PATH/A.full.txt')
 write.table(B.full, file = 'YOUR PATH/B.full.txt')
-
-
-
-
