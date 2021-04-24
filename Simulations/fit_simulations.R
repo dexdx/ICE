@@ -251,7 +251,7 @@ for(l in 1:length(X.list)){
 }
 
 
-##### 4) sDiCE ###########################################################
+##### 5) sDiCE ###########################################################
 L1B.sdice = matrix(0,M,length(X.list))
 source('Wilms_Functions.R')
 
@@ -284,8 +284,3 @@ for(l in 1:length(X.list)){
     
   }
 }
-
-
-
-    
-    
