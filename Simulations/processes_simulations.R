@@ -52,15 +52,41 @@ for(l in 1:S){
 }
 
 
+#' 1 : LOW DIMENSIONAL  / NON-SPARSE
+N = 200
+X1.list = vector(mode = 'list', length = M)
+sig = diag(1,K)
 
+for(m in 1:M){
+  X1.list[[m]] = VARMAsim(N, arlags = 1, phi = A.list[[1]][[m]], sigma = sig)$series
+  colnames(X1.list[[m]]) = 1:K
+}
 
+#' 2 : HIGH DIMENSIONAL / NON-SPARSE
+N = 40
+X2.list = vector(mode = 'list', length = M)
 
+for(m in 1:M){
+  X2.list[[m]] = VARMAsim(N, arlags = 1, phi = A.list[[2]][[m]], sigma = sig)$series
+  colnames(X2.list[[m]]) = 1:K
+}
 
+#' 3 : LOW DIMENSIONAL  / SPARSE
+N = 200
+X3.list = vector(mode = 'list', length = M)
 
+for(m in 1:M){
+  X3.list[[m]] = VARMAsim(N, arlags = 1, phi = A.list[[3]][[m]], sigma = sig)$series
+  colnames(X3.list[[m]]) = 1:K
+}
 
+#' 4 : HIGH DIMENSIONAL / SPARSE
+N = 40
+X4.list = vector(mode = 'list', length = M)
 
-
-
-
+for(m in 1:M){
+  X4.list[[m]] = VARMAsim(N, arlags = 1, phi = A.list[[4]][[m]], sigma = sig)$series
+  colnames(X4.list[[m]]) = 1:K
+}
 
 
