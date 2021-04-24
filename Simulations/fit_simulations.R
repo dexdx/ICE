@@ -112,11 +112,80 @@ for(l in 1:length(X.list)){
     
     ## Save L1 norm of the difference between true and estimated cointegrating vector
     L1B.lasso[m,l] = sum(abs(B.list[[l]][,m] - B))
-    write.table(L1B.lasso, file = 'Output/performance results/intermittant/L1B.lasso.cv2.lo.txt')
+    write.table(L1B.lasso, file = 'Output/performance results/L1B.lasso.txt')
 
   }
 }
 
+
+
+##### 1 ) sYWE ###########################################################
+L1B.sYWE = matrix(0,M,length(X.list))
+
+
+for(l in 1:length(X.list)){
+  for(m in 1:M){
     
+    start = proc.time()[3]
+    end = start + 60
+    done = FALSE
+    
+    while(proc.time()[3] < end && done == FALSE){
+      
+      x = X.list[[l]][[m]]
+      N = dim(x)[1]
+      K = dim(x)[2]
+      x.train = x[1:(N/2),]
+      x.test  = x[(N/2+1):N,]
+      
+      train.m = colMeans(x.train)
+      x.train.dm = t(apply(x.train, 1, function(x) x - train.m))
+      
+      A.tune = sYWE(x.train.dm)
+      
+      num.tune = length(A.tune)
+      x.fitted.tune = vector(mode = 'list', length = num.tune)
+      resid.tune = vector(mode = 'list', length = num.tune)
+      ssr.tune = numeric(num.tune)
+      
+      for(u in 1:num.tune){
+        x.fitted.tune[[u]] = VAR1.fit(x.test[1,], nrow(x.test), A.tune[[u]])
+        resid.tune[[u]] = x.test - x.fitted.tune[[u]]
+      }
+      
+      ssr.tune = sapply(resid.tune, function(x) sum(x^2))
+      ssr.ord = order(ssr.tune, decreasing = T)
+      if(ssr.ord[1] == 1){
+        s = 2
+        while(ssr.ord[s] == ssr.ord[s-1] + 1 && s < num.tune) s = s + 1
+        tune.min = ssr.ord[s]
+      } else tune.min = which.min(ssr.tune)
+      
+
+      A = A.tune[[tune.min]]
+      PI = A - diag(1,K)
+      B = ICE(PI, 1)
+      
+      L1B.sYWE[m,l] = sum(abs(B.list[[l]][,m] - B))
+      write.table(L1B.sYWE, file = 'Output/performance results/L1B.sYWE.txt')
+      
+      done = TRUE
+      
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
